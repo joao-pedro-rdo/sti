@@ -1,10 +1,17 @@
 #!/bin/bash
 
+# COLOCAR ALGO PARA FAZER DOWNLOAD REMOTAMENTE 
+
 # Verifique se o script está sendo executado como root
 if [ "$EUID" -ne 0 ]; then
   echo "Por favor, execute como root"
   exit
 fi
+echo "Instalando ICED TEA"
+sudo apt install icedtea-netx
+
+echo "Instalando OpenJFX"
+sudo apt isntall OpenJFX -y
 
 # Descompacte os arquivos
 echo "Descompactando jre-8u202-linux-x64.tar.gz..."

@@ -10,7 +10,7 @@ GLPI_AGENT_URL="https://github.com/glpi-project/glpi-agent/releases/download/1.9
 # Diretório temporário para download
 TEMP_DIR="/tmp/glpi-agent-install"
 # Configuração básica do GLPI Agent
-GLPI_SERVER_URL="http://10.24.125.11/front/inventory.php"
+GLPI_SERVER_URL="http://10.24.125.11/glpi/front/inventory.php"
 
 # Editar o arquivo de configuração do GLPI Agent
 CONFIG_FILE="/etc/glpi-agent/glpi-agent.conf"
@@ -33,7 +33,7 @@ chmod +x glpi-agent-installer.pl
 
 # Executando o instalador
 echo "Instalando o GLPI Agent..."
-#sudo ./glpi-agent-installer.pl
+sudo perl glpi-agent-installer.pl
 
 #Entrada de usuario automatizado
 expect <<EOF

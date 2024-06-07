@@ -62,10 +62,10 @@ done
 
 # Executar o script zabbix-install.sh com sudo
 echo "Executando o script zabbix-install.sh..."
-sudo ./zabbix-install.sh || error_exit "Erro ao executar o script zabbix-install.sh."
+sudo bash zabbix-install.sh || error_exit "Erro ao executar o script zabbix-install.sh."
 
 # Executar o script glpi-install.sh com sudo
 echo "Executando o script glpi-install.sh..."
-sudo ./glpi-install.sh || error_exit "Erro ao executar o script glpi-install.sh."
+sudo bash glpi-install.sh || error_exit "Erro ao executar o script glpi-install.sh."
 
 echo "Instalação e configuração concluídas com sucesso!"

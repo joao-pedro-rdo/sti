@@ -18,9 +18,9 @@ ZABBIX_SERVER="10.24.125.2"
 #read -p "Digite o nome do host para este agente (deixe em branco para usar o nome do host do sistema): " ZABBIX_AGENT_HOSTNAME
 
 # Se o nome do host não for fornecido, use o nome do host do sistema
-if [[ -z "$ZABBIX_AGENT_HOSTNAME" ]]; then
-    ZABBIX_AGENT_HOSTNAME=$(hostname)
-fi
+#if [[ -z "$ZABBIX_AGENT_HOSTNAME" ]]; then
+#    ZABBIX_AGENT_HOSTNAME=$(hostname)
+#fi
 
 
 # Instalar o Zabbix Agent

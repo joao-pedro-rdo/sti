@@ -8,10 +8,10 @@ if [ "$EUID" -ne 0 ]; then
   exit
 fi
 echo "Instalando ICED TEA"
-sudo apt install icedtea-netx
+sudo apt install icedtea-netx -y
 
 echo "Instalando OpenJFX"
-sudo apt isntall OpenJFX -y
+sudo apt install OpenJFX -y
 
 # Descompacte os arquivos
 echo "Descompactando jre-8u202-linux-x64.tar.gz..."

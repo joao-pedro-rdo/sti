@@ -10,7 +10,7 @@ GLPI_AGENT_URL="https://github.com/glpi-project/glpi-agent/releases/download/1.9
 # DiretÃ³rio temporÃ¡rio para download
 TEMP_DIR="/tmp/glpi-agent-install"
 # ConfiguraÃ§Ã£o bÃ¡sica do GLPI Agent
-GLPI_SERVER_URL="http://10.24.125.11/glpi/front/inventory.php"
+GLPI_SERVER_URL="http://<SEU IP>/glpi/front/inventory.php"
 
 # Editar o arquivo de configuraÃ§Ã£o do GLPI Agent
 CONFIG_FILE="/etc/glpi-agent/glpi-agent.conf"

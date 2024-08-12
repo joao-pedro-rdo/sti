@@ -58,6 +58,24 @@ for package in "${PACKAGES[@]}"; do
     dpkg -l | grep -i $package && echo "$package instalado com sucesso" || echo "Erro ao instalar $package"
 done
 
+
+# Instalando pacotes adicionais do servisor interno
+echo "Instalando Discord"
+wget  http://<IP-SERVIDOR>/downloads/discord.deb -O discord.deb
+dpkg -i discord.deb
+
+# DOWNLOAD VPN
+echo "Instalando VPN"
+wget http://<IP-SERVIDOR>/downloads/vpn-linux.tar.gz -O vpn.tar.gz
+tar zxvf vpn.tar.gz
+sudo ./anyconnect-linux64-4.9.01095/vpn/vpn_install.sh
+
+# Dowload SIMATEX
+echo "Dowload Simatex"
+wget http://<IP-SERVIDOR>/downloads/SiMatEx.zip
+
+
+
 #Deve integrar os demais  scripts
 
 # Executar o script zabbix-install.sh com sudo

@@ -4,8 +4,7 @@
 sudo apt-get install expect -y
 
 # Definindo a URL do agente GLPI. Certifique-se de verificar a versÃ£o mais recente no site oficial.
-GLPI_AGENT_URL="http://<IP-SERVIDOR>/downloads/glpi-agent-1.9-linux-installer.pl"
-
+GLPI_AGENT_URL="https://github.com/glpi-project/glpi-agent/releases/download/1.9/glpi-agent-1.9-linux-installer.pl"
 #! AARUMAR A PARADA QUE ELE NAO FAZ COM GITHUB
 
 # DiretÃ³rio temporÃ¡rio para download

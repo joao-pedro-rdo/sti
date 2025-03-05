@@ -13,7 +13,7 @@ fi
 
 # Função para configurar o proxy
 function configure_proxy {
-    PROXY_URL="10.25.108.52:2000"
+    PROXY_URL="10.25.62.52:2000"
     read -p "Digite o nome de usuário do proxy: " PROXY_USER
     read -sp "Digite a senha do proxy: " PROXY_PASSWORD
     echo
@@ -59,20 +59,16 @@ for package in "${PACKAGES[@]}"; do
 done
 
 
-# Instalando pacotes adicionais do servisor interno
-echo "Instalando Discord"
-wget  http://<IP-SERVIDOR>/downloads/discord.deb -O discord.deb
-dpkg -i discord.deb
 
 # DOWNLOAD VPN
 echo "Instalando VPN"
-wget http://<IP-SERVIDOR>/downloads/vpn-linux.tar.gz -O vpn.tar.gz
+wget http://10.24.125.55/downloads/vpn-linux.tar.gz -O vpn.tar.gz
 tar zxvf vpn.tar.gz
 sudo ./anyconnect-linux64-4.9.01095/vpn/vpn_install.sh
 
 # Dowload SIMATEX
 echo "Dowload Simatex"
-wget http://<IP-SERVIDOR>/downloads/SiMatEx.zip
+wget http://10.24.125.55/downloads/SiMatEx.zip
 
 
 

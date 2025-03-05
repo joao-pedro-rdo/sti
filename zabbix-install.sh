@@ -6,28 +6,64 @@ function error_exit {
     exit 1
 }
 
+# Endereço fixo do proxy
+PROXY_URL="10.25.62.52:2000"
+USE_PROXY=false
+
+# Processamento de argumentos com getopts:
+# -p: ativa o uso do proxy
+# -u: proxy username
+# -w: proxy password
+while getopts "pu:w:" opt; do
+    case $opt in
+        p)
+            USE_PROXY=true
+            ;;
+        u)
+            PROXY_USER="$OPTARG"
+            ;;
+        w)
+            PROXY_PASSWORD="$OPTARG"
+            ;;
+        \?)
+            error_exit "Opção inválida: -$OPTARG"
+            ;;
+        :)
+            error_exit "A opção -$OPTARG requer um argumento."
+            ;;
+    esac
+done
+
+# Se o proxy foi solicitado, verificar se username e password foram informados
+if $USE_PROXY; then
+    if [ -z "$PROXY_USER" ] || [ -z "$PROXY_PASSWORD" ]; then
+         error_exit "Ao usar o proxy, é necessário informar o usuário (-u) e a senha (-w)."
+    fi
+    echo "Configurando o proxy com o usuário informado..."
+    export http_proxy="http://$PROXY_USER:$PROXY_PASSWORD@$PROXY_URL"
+    export https_proxy="http://$PROXY_USER:$PROXY_PASSWORD@$PROXY_URL"
+fi
+
+# Avançar os parâmetros posicionais após o getopts
+shift $((OPTIND - 1))
+
 # Verificar se o script está sendo executado como root
 if [ "$(id -u)" -ne 0 ]; then
     error_exit "Este script precisa ser executado como root. Use sudo."
 fi
 
-# Definir o endereço IP do servidor Zabbix
+# Definir o endereço IP do servidor Zabbix e o arquivo de configuração do agente
 ZABBIX_SERVER="10.24.125.2"
 ZABBIX_AGENT_CONF="/etc/zabbix/zabbix_agent2.conf"
 
-# Verificar se o parâmetro de hostname foi passado
+# Verificar se o parâmetro de hostname foi passado como argumento posicional
 if [ -n "$1" ]; then
     ZABBIX_AGENT_HOSTNAME="$1"
 else
-    # Caso não tenha sido passado, perguntar ao usuário com timeout
     echo "Digite o nome do host para este agente (pressione ENTER para deixar em branco ou aguarde 10 segundos para usar o hostname do sistema): "
-    
-    # Definir o tempo máximo para a entrada (10 segundos)
     read -t 10 ZABBIX_AGENT_HOSTNAME
-    
-    # Se nada for digitado, usar o nome do host do sistema
     if [ -z "$ZABBIX_AGENT_HOSTNAME" ]; then
-        ZABBIX_AGENT_HOSTNAME=$(hostname)
+         ZABBIX_AGENT_HOSTNAME=$(hostname)
     fi
 fi
 
@@ -52,7 +88,6 @@ dpkg -i zabbix-release_latest_7.2+ubuntu24.04_all.deb || error_exit "Erro ao ins
 echo "Atualizando repositórios..."
 apt update || error_exit "Erro ao atualizar os repositórios."
 
-# Instalar o Zabbix Agent
 echo "Instalando o Zabbix Agent..."
 apt install -y zabbix-agent2 || error_exit "Erro ao instalar o Zabbix Agent."
 
@@ -61,21 +96,17 @@ if [ ! -f "$ZABBIX_AGENT_CONF" ]; then
     error_exit "Arquivo de configuração do Zabbix Agent não encontrado em $ZABBIX_AGENT_CONF."
 fi
 
-# Configurar o Zabbix Agent
 echo "Configurando o Zabbix Agent..."
 sed -i "s/^Server=.*/Server=$ZABBIX_SERVER/" $ZABBIX_AGENT_CONF || error_exit "Erro ao configurar o servidor Zabbix."
 sed -i "s/^ServerActive=.*/ServerActive=$ZABBIX_SERVER/" $ZABBIX_AGENT_CONF || error_exit "Erro ao configurar o servidor ativo do Zabbix."
 sed -i "s/^Hostname=.*/Hostname=$ZABBIX_AGENT_HOSTNAME/" $ZABBIX_AGENT_CONF || error_exit "Erro ao configurar o nome do host do Zabbix Agent."
 
-# Reiniciar o serviço do Zabbix Agent para aplicar as mudanças
 echo "Reiniciando o serviço do Zabbix Agent..."
 systemctl restart zabbix-agent2.service || error_exit "Erro ao reiniciar o serviço do Zabbix Agent."
 
-# Habilitar o serviço do Zabbix Agent para iniciar no boot
 echo "Habilitando o serviço do Zabbix Agent para iniciar no boot..."
 systemctl enable zabbix-agent2.service || error_exit "Erro ao habilitar o serviço do Zabbix Agent para iniciar no boot."
 
-# Verificar o status do serviço
 systemctl status zabbix-agent2.service --no-pager
 
 echo "Instalação e configuração do Zabbix Agent concluídas com sucesso!"

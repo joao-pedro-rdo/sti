@@ -10,8 +10,6 @@ PACKAGES=(
     curl
 )
 
-URL_VPN=http://10.24.125.55/downloads/vpn-linux.tar.gz
-
 
 # Função para exibir mensagens de erro e sair
 function error_exit {
@@ -66,16 +64,12 @@ fi
 # Atualizar repositórios e pacotes
 echo "Atualizando repositórios e pacotes..."
 apt-get update || error_exit "Erro ao atualizar os repositórios."
-apt-get upgrade -y || error_exit "Erro ao atualizar os pacotes."
-
-
 
 # Instalar os pacotes
 echo "Instalando pacotes: ${PACKAGES[@]}"
 for package in "${PACKAGES[@]}"; do
     apt-get install -y "$package" || error_exit "Erro ao instalar o pacote $package."
 done
-
 echo "Todos os pacotes foram instalados com sucesso!"
 
 # Verificar a instalação dos pacotes
@@ -83,27 +77,15 @@ for package in "${PACKAGES[@]}"; do
     dpkg -l | grep -i "$package" && echo "$package instalado com sucesso" || echo "Erro ao instalar $package"
 done
 
-# DOWNLOAD VPN
-VPN_TAR="vpn-linux.tar.gz"
-echo "Instalando VPN"
-if [ ! -f "$VPN_TAR" ]; then
-    wget http://10.24.125.55/downloads/vpn-linux.tar.gz -O "$VPN_TAR" || error_exit "Erro ao baixar o pacote VPN."
-fi
-tar zxvf "$VPN_TAR" || error_exit "Erro ao descompactar o pacote VPN."
-if [ -f "./anyconnect-linux64-4.9.01095/vpn/vpn_install.sh" ]; then
-    sudo ./anyconnect-linux64-4.9.01095/vpn/vpn_install.sh || error_exit "Erro ao instalar a VPN."
-else
-    error_exit "Script de instalação da VPN não encontrado."
-fi
-
-# Download SIMATEX
-SIMATEX_ZIP="SiMatEx.zip"
-echo "Download SiMatEx"
-if [ ! -f "$SIMATEX_ZIP" ]; then
-    wget http://10.24.125.55/downloads/SiMatEx.zip || error_exit "Erro ao baixar o pacote SiMatEx."
-fi
-
 # Verificar e executar os scripts adicionais
+
+# Executar o script vpn-install.sh
+if [ -f "vpn-install.sh" ]; then
+    echo "Executando o script vpn-install..."
+    sudo bash vpn-install.sh  || error_exit "Erro ao executar o script vpn-install."
+else
+    error_exit "Arquivo vpn-install não encontrado."
+fi
 
 # Executar o script zabbix-install.sh
 if [ -f "zabbix-install.sh" ]; then
@@ -112,6 +94,15 @@ if [ -f "zabbix-install.sh" ]; then
 else
     error_exit "Arquivo zabbix-install.sh não encontrado."
 fi
+
+# Executar o script vpn-install.sh
+if [ -f "antivirus.sh" ]; then
+    echo "Executando o script antivirus..."
+    sudo bash antivirus.sh  || error_exit "Erro ao executar o script antivirus."
+else
+    error_exit "Arquivo antivirus não encontrado."
+fi
+
 
 # Executar o script glpi-install.sh
 if [ -f "glpi-install.sh" ]; then

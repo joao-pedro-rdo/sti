@@ -95,6 +95,15 @@ else
     error_exit "Arquivo zabbix-install.sh não encontrado."
 fi
 
+# Executar o script rustdesk-install.sh
+if [ -f "rustdesk-install.sh" ]; then
+    echo "Executando o script rustdesk-install.sh..."
+    sudo bash rustdesk-install.sh -p -u $PROXY_USER -w $PROXY_PASSWORD || error_exit "Erro ao executar o script rustdesk-install.sh."
+else
+    error_exit "Arquivo rustdesk-install.sh não encontrado."
+fi
+
+
 # Executar o script vpn-install.sh
 if [ -f "antivirus.sh" ]; then
     echo "Executando o script antivirus..."

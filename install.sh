@@ -8,6 +8,7 @@ PACKAGES=(
     libreoffice
     wget
     curl
+    ntp
 )
 
 
